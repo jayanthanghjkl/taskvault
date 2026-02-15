@@ -2,8 +2,13 @@
 
 import { createTask } from '@/actions/taskActions';
 import { useActionState } from 'react';
-import { useRef } from 'react';
-import { PlusCircle, Loader2 } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const initialState = {
     error: null as string | null,
@@ -14,39 +19,54 @@ export default function TaskForm() {
     const [state, formAction, isPending] = useActionState(createTask, initialState);
     const formRef = useRef<HTMLFormElement>(null);
 
-    if (state.success && formRef.current) {
-        formRef.current.reset();
-    }
+    useEffect(() => {
+        if (state.success && formRef.current) {
+            formRef.current.reset();
+        }
+    }, [state.success]);
 
     return (
-        <form action={formAction} ref={formRef} className="mb-6 md:mb-8">
-            <div className="flex flex-col md:flex-row gap-3">
-                <input
-                    type="text"
+        <Box component="form" action={formAction} ref={formRef} sx={{ mb: 4, borderRadius: 3, p: 3, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }}>
+            <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+                <TextField
+                    fullWidth
+                    variant="outlined"
                     name="title"
                     placeholder="What needs to be done?"
                     required
-                    className="w-full md:flex-1 px-4 py-3.5 md:py-3 bg-white border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm placeholder:text-muted-foreground text-foreground text-base"
-                />
-                <button
-                    type="submit"
                     disabled={isPending}
-                    className="w-full md:w-auto bg-primary text-primary-foreground px-6 py-3.5 md:py-3 rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center md:justify-start gap-2 font-semibold md:font-medium shadow-[0_4px_14px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.4)] active:scale-[0.98]"
+                    InputProps={{
+                        sx: {
+                            bgcolor: 'white',
+                            borderRadius: 3,
+                            '& fieldset': { borderColor: 'rgba(0,0,0,0.08)' },
+                            '&:hover fieldset': { borderColor: 'primary.main' },
+                        }
+                    }}
+                />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isPending}
+                    startIcon={!isPending && <AddCircleOutlineIcon />}
+                    sx={{
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: 3,
+                        whiteSpace: 'nowrap',
+                        boxShadow: '0 4px 14px 0 rgba(0,118,255,0.39)',
+                        fontWeight: 'bold',
+                        fontSize: '1rem'
+                    }}
                 >
-                    {isPending ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                        <PlusCircle className="w-5 h-5" />
-                    )}
-                    <span>Add Task</span>
-                </button>
-            </div>
+                    {isPending ? <CircularProgress size={24} color="inherit" /> : 'Add Task'}
+                </Button>
+            </Box>
             {state.error && (
-                <p className="text-destructive text-sm mt-3 flex items-center gap-2 pl-1 bg-destructive/5 p-2 rounded-lg border border-destructive/10 md:bg-transparent md:border-0 md:p-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-destructive inline-block flex-shrink-0" />
+                <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>
                     {state.error}
-                </p>
+                </Alert>
             )}
-        </form>
+        </Box>
     );
 }

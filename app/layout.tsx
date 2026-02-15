@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+// import { ThemeProvider } from "@/components/theme-provider"; // Commented out to switch to MUI
+import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        {children}
+        {/* <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        > */}
+        <ThemeRegistry>
+          {children}
+        </ThemeRegistry>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

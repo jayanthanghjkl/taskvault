@@ -1,10 +1,21 @@
-
 import { getTasks } from '@/actions/taskActions';
 import TaskForm from '@/components/TaskForm';
 import TaskList from '@/components/TaskList';
 import { createClient } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+// MUI Imports
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -19,66 +30,92 @@ export default async function DashboardPage() {
     const tasks = await getTasks();
 
     return (
-        <div className="min-h-screen bg-background font-sans pb-20 sm:pb-0">
+        <Box sx={{ flexGrow: 1, minHeight: '100vh', bgcolor: 'background.default' }}>
             {/* Header */}
-            <header className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50 supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold shadow-sm">
-                            <Avatar className="h-9 w-9 border border-sidebar-border">
-                                <AvatarImage src="" />
-                                <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground">
-                                    {user?.email?.[0].toUpperCase() || "U"}
-                                </AvatarFallback>
+            <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'white', borderBottom: '1px solid', borderColor: 'divider' }}>
+                <Container maxWidth="lg">
+                    <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40, fontWeight: 'bold', boxShadow: '0 4px 10px rgba(98, 0, 234, 0.3)' }}>
+                                {user?.email?.[0].toUpperCase() || "U"}
                             </Avatar>
-                        </div>
-                        <div className="flex items-center gap-2 px-2.5 py-1.5 bg-muted/50 rounded-sm border border-border/50 max-w-[140px] sm:max-w-none">
-                            <span className="text-xs font-medium text-muted-foreground truncate">{user.email?.split('@')[0] || 'User'}</span>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 sm:gap-4">
+                            <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column' }}>
+                                <Typography variant="subtitle2" color="text.primary" fontWeight="bold">
+                                    <span className="text-xs font-medium text-muted-foreground truncate">{user.email?.split('@')[0] || 'User'}</span>
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {user.email}
+                                </Typography>
+                            </Box>
+                        </Box>
 
                         <form action="/auth/signout" method="post">
-                            <button
-                                className="outline text-sm font-medium text-muted-foreground hover:text-destructive transition-colors p-2 sm:px-3 sm:py-2 rounded-sm hover:bg-destructive/10"
-                                aria-label="Sign out"
+                            <Button
+                                type="submit"
+                                color="error"
+                                startIcon={<LogoutIcon />}
+                                sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
                             >
-                                <span className="hidden sm:inline">Sign out</span>
-                                <span className="sm:hidden">Sign out</span>
-                            </button>
+                                Sign out
+                            </Button>
                         </form>
-                    </div>
-                </div>
-            </header>
+                    </Toolbar>
+                </Container>
+            </AppBar>
 
-            <main className="max-w-3xl mx-auto py-6 sm:py-10 px-4 sm:px-6 space-y-6 sm:space-y-8">
-                <div className="space-y-2">
-                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            <Container maxWidth="md" sx={{ py: 6 }}>
+                <Box sx={{ mb: 6, textAlign: 'center' }}>
+                    <Typography variant="h3" component="h1" fontWeight="800" gutterBottom sx={{
+                        background: 'linear-gradient(45deg, #6200ea 30%, #00e5ff 90%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        pb: 1 // prevent clipping descenders
+                    }}>
                         Today's Tasks
-                    </h2>
-                    <p className="text-muted-foreground text-base sm:text-lg">
+                    </Typography>
+                    <Typography variant="h6" color="text.secondary" fontWeight="normal">
                         Stay focused and organized.
-                    </p>
-                </div>
+                    </Typography>
+                </Box>
 
-                <div className="bg-card rounded-2xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-border p-4 sm:p-6 md:p-8">
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: { xs: 2, md: 4 },
+                        borderRadius: 4,
+                        bgcolor: 'background.paper',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        border: '1px solid',
+                        borderColor: 'divider'
+                    }}
+                >
                     <TaskForm />
 
-                    <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-border/50">
-                        <div className="mb-4 sm:mb-6 flex items-center justify-between">
-                            <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                                Your List
-                            </h3>
-                            <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <Box sx={{ mt: 6, pt: 4, borderTop: '1px solid', borderColor: 'divider' }}>
+                        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.75rem" letterSpacing={1.5}>
+                                YOUR LIST
+                            </Typography>
+                            <Box sx={{
+                                px: 1.5,
+                                py: 0.5,
+                                borderRadius: 4,
+                                bgcolor: 'primary.main',
+                                color: 'white',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                boxShadow: '0 2px 8px rgba(98, 0, 234, 0.4)'
+                            }}>
                                 {tasks?.length || 0} Tasks
-                            </span>
-                        </div>
-                        <TaskList tasks={tasks || []} />
-                        
-                    </div>
-                </div>
-            </main>
-        </div>
+                            </Box>
+                        </Box>
+                        <Box sx={{ mb: 4, borderRadius: 3, p: 3, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }}>
+                            <TaskList tasks={tasks || []} />
+                        </Box>
+                    </Box>
+                </Paper>
+            </Container>
+        </Box>
     );
 }
+

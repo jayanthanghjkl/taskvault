@@ -1,8 +1,14 @@
 'use client';
 
 import { toggleTask, deleteTask } from '@/actions/taskActions';
-import { Trash2, CheckCircle, Circle } from 'lucide-react';
-import { startTransition, useOptimistic } from 'react';
+import { startTransition, useOptimistic, useState } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 type Task = {
     id: string;
@@ -15,6 +21,7 @@ export default function TaskItem({ task }: { task: Task }) {
         task,
         (state, newStatus: boolean) => ({ ...state, is_completed: newStatus })
     );
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const handleToggle = async () => {
         const newStatus = !optimisticTask.is_completed;
@@ -25,38 +32,72 @@ export default function TaskItem({ task }: { task: Task }) {
     };
 
     const handleDelete = async () => {
-        // Removed confirm for a cleaner feel, could add a better UI confirmation later
+        setIsDeleting(true);
         await deleteTask(task.id);
     };
 
+    if (isDeleting) return null;
+
     return (
-        <div className={`group flex items-center justify-between p-5 bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-border/60 hover:border-primary/30 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all duration-300 ${optimisticTask.is_completed ? 'bg-muted/30' : ''}`}>
-            <div className="flex items-center gap-4 flex-1">
-                <button
-                    onClick={handleToggle}
-                    className={`relative flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all duration-300 ${optimisticTask.is_completed
-                            ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_2px_8px_rgba(16,185,129,0.3)]'
-                            : 'border-muted-foreground/30 hover:border-primary text-transparent hover:bg-primary/5'
-                        }`}
-                >
-                    <CheckCircle className={`w-4 h-4 transition-transform duration-300 ${optimisticTask.is_completed ? 'scale-100' : 'scale-0'}`} />
-                </button>
-                <span
-                    className={`text-lg font-medium transition-colors duration-300 ${optimisticTask.is_completed
-                            ? 'line-through text-muted-foreground decoration-border'
-                            : 'text-foreground'
-                        }`}
-                >
-                    {task.title}
-                </span>
-            </div>
-            <button
-                onClick={handleDelete}
-                className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all duration-200 p-2 rounded-lg hover:bg-destructive/10"
-                aria-label="Delete task"
+        <Paper
+            elevation={0}
+            component="li"
+            sx={{
+                p: 0,
+                borderRadius: 3,
+                border: '1px solid',
+                borderColor: optimisticTask.is_completed ? 'transparent' : 'rgba(0,0,0,0.06)',
+                bgcolor: optimisticTask.is_completed ? 'action.hover' : 'background.paper',
+                transition: 'all 0.2s',
+                '&:hover': {
+                    borderColor: 'primary.light',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                },
+                display: 'flex',
+                alignItems: 'center',
+                overflow: 'hidden'
+            }}
+        >
+            <Checkbox
+                checked={optimisticTask.is_completed}
+                onChange={handleToggle}
+                icon={<RadioButtonUncheckedIcon />}
+                checkedIcon={<CheckCircleIcon />}
+                sx={{
+                    p: 2,
+                    color: 'text.disabled',
+                    '&.Mui-checked': {
+                        color: 'success.main',
+                    }
+                }}
+            />
+            <Typography
+                variant="body1"
+                sx={{
+                    flexGrow: 1,
+                    py: 2,
+                    textDecoration: optimisticTask.is_completed ? 'line-through' : 'none',
+                    color: optimisticTask.is_completed ? 'text.disabled' : 'text.primary',
+                    fontWeight: 500
+                }}
             >
-                <Trash2 className="w-5 h-5" />
-            </button>
-        </div>
+                {task.title}
+            </Typography>
+            <IconButton
+                onClick={handleDelete}
+                aria-label="delete"
+                sx={{
+                    mr: 1,
+                    color: 'text.disabled',
+                    '&:hover': {
+                        color: 'error.main',
+                        bgcolor: 'rgba(211, 47, 47, 0.04)'
+                    }
+                }}
+            >
+                <DeleteOutlineIcon />
+            </IconButton>
+        </Paper>
     );
 }

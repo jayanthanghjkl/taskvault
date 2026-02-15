@@ -3,7 +3,18 @@
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+// MUI Imports
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+// Icons
+import LoginIcon from '@mui/icons-material/Login';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -52,71 +63,114 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md space-y-8 bg-card rounded-2xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-border/50">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Paper
+                    elevation={6}
+                    sx={{
+                        p: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        width: '100%',
+                        borderRadius: 3,
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(10px)',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            m: 1,
+                            bgcolor: 'secondary.main',
+                            width: 50,
+                            height: 50,
+                            borderRadius: '50%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color: 'white',
+                            mb: 2,
+                            boxShadow: '0 4px 10px rgba(0,229,255, 0.4)'
+                        }}
+                    >
+                        <LoginIcon fontSize="large" />
+                    </Box>
+                    <Typography component="h1" variant="h4" fontWeight="bold" gutterBottom color="primary">
                         Welcome Back
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
                         Enter your credentials to access your workspace
-                    </p>
-                </div>
-                <form className="space-y-6 mt-8">
-                    <div className="space-y-5">
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-foreground">
-                                Email address
-                            </label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 bg-input text-foreground border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm placeholder:text-muted-foreground text-base"
-                                placeholder="name@example.com"
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-foreground">
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 bg-input text-foreground border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm placeholder:text-muted-foreground text-base"
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                    </div>
+                    </Typography>
 
-                    {error && (
-                        <div className="p-4 bg-destructive/10 text-destructive text-sm rounded-xl border border-destructive/20 flex items-start gap-2">
-                            <span className="mt-0.5 block w-2 h-2 rounded-full bg-destructive flex-shrink-0" />
-                            {error}
-                        </div>
-                    )}
+                    <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            InputProps={{
+                                sx: { borderRadius: 2 }
+                            }}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            InputProps={{
+                                sx: { borderRadius: 2 }
+                            }}
+                        />
 
-                    <div className="flex flex-col gap-4 pt-2">
-                        <button
+                        {error && (
+                            <Alert severity={error.includes('Check your email') ? "success" : "error"} sx={{ mt: 2, borderRadius: 2 }}>
+                                {error}
+                            </Alert>
+                        )}
+
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            disabled={loading}
                             onClick={handleLogin}
-                            disabled={loading}
-                            className="w-full px-4 py-3.5 text-base font-semibold text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-all shadow-[0_4px_14px_rgba(99,102,241,0.3)] disabled:opacity-50 flex justify-center items-center active:scale-[0.98]"
+                            startIcon={!loading && <LoginIcon />}
+                            sx={{ mt: 3, mb: 1, py: 1.5, borderRadius: 2, fontSize: '1rem' }}
                         >
-                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Log In'}
-                        </button>
-                        <button
-                            onClick={handleSignUp}
+                            {loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
+                        </Button>
+                        <Button
+                            fullWidth
+                            variant="outlined"
                             disabled={loading}
-                            className="w-full px-4 py-3.5 text-base font-semibold text-foreground bg-background border border-input hover:bg-accent hover:text-accent-foreground rounded-xl transition-all disabled:opacity-50 flex justify-center items-center active:scale-[0.98]"
+                            onClick={handleSignUp}
+                            startIcon={!loading && <PersonAddIcon />}
+                            sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2, borderWidth: 2, '&:hover': { borderWidth: 2 } }}
                         >
                             Create Account
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
     );
 }
