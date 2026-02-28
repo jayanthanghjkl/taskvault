@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { Layout, CheckCircle, Shield, Zap } from 'lucide-react';
 
-// MUI Imports
+
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'; // Grid version 2 is usually preferred in new projects but v1 is stable. Using v1 (Grid) for simplicity as v2 is Grid2
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
@@ -22,7 +22,7 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import { email } from 'zod';
+
 
 export default function Home() {
   const user = { email: 'demo@taskvault.com' };
@@ -32,10 +32,9 @@ export default function Home() {
     { id: 3, title: 'Update documentation', completed: false },
   ];
   const newTask = '';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setNewTask = (val: string) => { };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const addTask = (e: any) => e.preventDefault();
+  const addTask = (e: React.FormEvent) => e.preventDefault();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const deleteTask = (id: number) => { };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -219,7 +218,7 @@ export default function Home() {
                         background: 'linear-gradient(45deg, #6200ea 30%, #00e5ff 90%)',
                         WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', pb: 1
                       }}>
-                        Today's Tasks
+                        Today&apos;s Tasks
                       </Typography>
                     </Box>
 

@@ -4,7 +4,6 @@ import TaskList from '@/components/TaskList';
 import { createClient } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
 
-// MUI Imports
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,10 +13,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import LogoutIcon from '@mui/icons-material/Logout';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-
-export default async function DashboardPage() {
+export default async function Dashboard() {
     const supabase = await createClient();
     const {
         data: { user },
@@ -71,7 +68,7 @@ export default async function DashboardPage() {
                         WebkitTextFillColor: 'transparent',
                         pb: 1 // prevent clipping descenders
                     }}>
-                        Today's Tasks
+                        Today&apos;s Tasks
                     </Typography>
                     <Typography variant="h6" color="text.secondary" fontWeight="normal">
                         Stay focused and organized.
@@ -118,4 +115,3 @@ export default async function DashboardPage() {
         </Box>
     );
 }
-

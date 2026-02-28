@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     revalidatePath('/', 'layout');
 
-    // Redirect to login page using 303 See Other to ensure the method changes to GET
+   
     return NextResponse.redirect(new URL('/login', req.url), {
         status: 303,
     });

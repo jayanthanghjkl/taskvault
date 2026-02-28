@@ -57,7 +57,7 @@ export default function LoginPage() {
             setError(error.message);
             setLoading(false);
         } else {
-            setError('Check your email to confirm your account!');
+            setError('User created successfully!, click login to continue');
             setLoading(false);
         }
     };
@@ -142,7 +142,7 @@ export default function LoginPage() {
                         />
 
                         {error && (
-                            <Alert severity={error.includes('Check your email') ? "success" : "error"} sx={{ mt: 2, borderRadius: 2 }}>
+                            <Alert severity={error.includes('User created successfully!, click login to continue') ? "success" : "error"} sx={{ mt: 2, borderRadius: 2 }}>
                                 {error}
                             </Alert>
                         )}

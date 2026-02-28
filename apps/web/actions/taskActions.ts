@@ -1,11 +1,11 @@
 'use server';
 
 import { createClient } from '@/lib/supabase';
-import { taskSchema } from '@/schemas/taskSchema';
+import { taskSchema } from '@repo/common-types';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export async function createTask(prevState: any, formData: FormData) {
+export async function createTask(prevState: unknown, formData: FormData) {
     const supabase = await createClient();
     const {
         data: { user },
