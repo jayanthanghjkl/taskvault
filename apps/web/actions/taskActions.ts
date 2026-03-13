@@ -16,7 +16,8 @@ export async function createTask(prevState: unknown, formData: FormData) {
     }
 
     const title = formData.get('title') as string;
-    const validation = taskSchema.safeParse({ title });
+    const priority = formData.get('priority') as "Low" | "Medium" | "High";
+    const validation = taskSchema.safeParse({ title, priority });
 
     if (!validation.success) {
         return {
@@ -27,6 +28,7 @@ export async function createTask(prevState: unknown, formData: FormData) {
 
     const { error } = await supabase.from('tasks').insert({
         title: validation.data.title,
+        priority: validation.data.priority,
         user_id: user.id,
     });
 

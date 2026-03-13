@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Chip from '@mui/material/Chip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -14,6 +15,7 @@ type Task = {
     id: string;
     title: string;
     is_completed: boolean;
+    priority: 'Low' | 'Medium' | 'High';
 };
 
 export default function TaskItem({ task }: { task: Task }) {
@@ -84,6 +86,13 @@ export default function TaskItem({ task }: { task: Task }) {
             >
                 {task.title}
             </Typography>
+            <Chip
+                label={task.priority || 'Medium'}
+                size="small"
+                color={task.priority === 'High' ? 'error' : task.priority === 'Low' ? 'success' : 'warning'}
+                variant="outlined"
+                sx={{ mr: 2, fontWeight: 'bold' }}
+            />
             <IconButton
                 onClick={handleDelete}
                 aria-label="delete"

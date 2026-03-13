@@ -8,6 +8,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const initialState = {
@@ -44,6 +47,23 @@ export default function TaskForm() {
                         }
                     }}
                 />
+                <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                        name="priority"
+                        defaultValue="Medium"
+                        disabled={isPending}
+                        sx={{
+                            bgcolor: 'white',
+                            borderRadius: 3,
+                            '& fieldset': { borderColor: 'rgba(0,0,0,0.08)' },
+                            '&:hover fieldset': { borderColor: 'primary.main' },
+                        }}
+                    >
+                        <MenuItem value="Low">Low</MenuItem>
+                        <MenuItem value="Medium">Medium</MenuItem>
+                        <MenuItem value="High">High</MenuItem>
+                    </Select>
+                </FormControl>
                 <Button
                     type="submit"
                     variant="contained"
