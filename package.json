@@ -10,11 +10,6 @@
   "devDependencies": {
     "turbo": "^2.8.11"
   },
-  "packageManager": "pnpm@8.15.5",
-  "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
-  }
+  "packageManager": "pnpm@8.15.5"
 
 }
